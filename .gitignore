@@ -1,0 +1,13 @@
+.metadata
+.DS_Store
+logs
+project/project
+project/target
+target
+tmp
+bin
+.history
+.settings
+.classpath
+.project
+.cache
