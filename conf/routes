@@ -5,6 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 GET		/articles					controllers.Application.listArticles
+GET		/article/:friendlyName		controllers.Application.getArticle(friendlyName: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
