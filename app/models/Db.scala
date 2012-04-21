@@ -16,8 +16,8 @@ object Db {
 		val dbHost = uri.getHost
 		// Strip out leading slash
 		val dbName = if(uri.getPath.startsWith("/")) uri.getPath.substring(1) else uri.getPath
-
-		val conn = MongoConnection(dbHost)(dbName)
+		val dbPort = uri.getPort
+		val conn = MongoConnection(dbHost, dbPort)(dbName)
 
 		// Get user credentials
 		val credentials = if(Option(uri.getUserInfo) isDefined) Option(uri .getUserInfo.split(":",2)) else None
