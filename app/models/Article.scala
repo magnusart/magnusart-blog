@@ -17,11 +17,10 @@ case class Article(@Key("_id") friendlyUrl:String,
 	title:String, 
 	body:String, 
 	author:String, 
-	publishDate:DateTime = getLocalCurrentTime, 
-	metaData:MetaData = MetaData()) {
+	publishDate:String = getLocalCurrentTime.toString) {
 
 	import org.scala_tools.time.Imports.DateTimeFormat._
-	val formattedPublishDate = publishDate.toString(forPattern(datePattern))
+	val formattedPublishDate = new DateTime(publishDate).toString(forPattern(datePattern))
 }
 
 object Article {
@@ -29,4 +28,6 @@ object Article {
 
 	def list():List[Article] = ArticleDAO.find(MongoDBObject.empty).sort(orderBy = MongoDBObject("publishDate" -> 1)).toList
 	def get(friendlyUrl:String) = ArticleDAO.findOneByID(friendlyUrl)
+	def upsert(friendlyUrl:String, article:Article) = ArticleDAO.update(MongoDBObject("_id" -> friendlyUrl), article, true, false, new WriteConcern())			
+
 }

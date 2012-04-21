@@ -8,7 +8,7 @@
 			<h2 class="post-heading"><a href="@routes.Application.getArticle(article.friendlyUrl)">@article.title</a></h2>
 			<h5 class="post-info">@Messages("post.info", article.author, article.formattedPublishDate)</h5>
 			<div>
-				@article.body
+				@Html(article.body)
 				<br/>
 				<br/>
 				<a class="btn btn-warning" data-toggle="modal" href="#editArticle" >Edit Post</a>
@@ -19,24 +19,71 @@
 			    <h3>Edit article: @article.title</h3>
 			  </div>
 			  <div class="modal-body">
-			  	<label for="editArticleTitle">Title</label><input id="editArticleTitle" name="editArticleTitle" value="@article.title"/>
-			    <textarea id="editArticleTextarea" placeholder="Enter text ..." style="width: 510px; height: 200px">@article.body</textarea>
+			  	<form id="editArticleForm">
+			  		<input type="hidden" name="friendly_url" value="@article.friendlyUrl" />
+			  		<label for="editArticleTitle">Title</label><input name="title" value="@article.title"/>
+				  	<label for="editArticleTextarea">Body text</label>
+				    <textarea id="editArticleTextarea" name="body" placeholder="Enter text ..." style="width: 510px; height: 200px">@article.body</textarea>
+				    <input type="hidden" name="author" value="@article.author" />
+				    <input type="hidden" name="publish_date" value="@article.publishDate" />
+				</form>
 			  </div>
 			  <div class="modal-footer">
 			    <a href="#" class="btn" data-dismiss="modal">Close</a>
-			    <a href="#" class="btn btn-primary">Save changes</a>
+			    <a href="#" id="saveEditArticle" class="btn btn-primary">Save changes</a>
 			  </div>
 			  <script type="text/javascript">
-			  function doLoadArticle() {
-				$('#editArticleTextarea').wysihtml5({
-					"font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
-					"emphasis": true, //Italics, bold, etc. Default true
-					"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-					"html": false, //Button which allows you to edit the generated HTML. Default false
-					"link": true, //Button to insert a link. Default true
-					"image": true //Button to insert an image. Default true
-				});
-			  }
+				  function doLoadArticle() {
+					$('#editArticleTextarea').wysihtml5({
+						"font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+						"emphasis": true, //Italics, bold, etc. Default true
+						"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+						"html": false, //Button which allows you to edit the generated HTML. Default false
+						"link": true, //Button to insert a link. Default true
+						"image": true //Button to insert an image. Default true
+					});
+
+					$.fn.serializeObject = function()
+					{
+					    var o = {};
+					    var a = this.serializeArray();
+					    $.each(a, function() {
+					        if (o[this.name] !== undefined) {
+					            if (!o[this.name].push) {
+					                o[this.name] = [o[this.name]];
+					            }
+					            o[this.name].push(this.value || '');
+					        } else {
+					            o[this.name] = this.value || '';
+					        }
+					    });
+					    return o;
+					};
+
+					$("#saveEditArticle").live("click", function(){
+						self = this;
+						self.serialized = $('#editArticleForm').serializeObject();
+						delete self.serialized._wysihtml5_mode; // Delete extra info
+
+						self.json = JSON.stringify(self.serialized);
+						console.log("JSON: " + self.json);
+
+						$.ajax({
+							url: "@routes.Application.upsertArticle(article.friendlyUrl)",
+							type: "put",
+							data: self.json,
+							contentType: "application/json",
+							dataType: "json"
+						}).done(function(msg){ 
+							console.log("Success!");
+							$('#editArticle').modal('hide');
+						}).fail(function(jqXHR, textStatus){
+							console.log("Failure! " + textStatus);
+						});
+					 }); 
+				  }
+
+
 			  </script>
 			</div>
 			@if(displayFullArticle) {
@@ -46,7 +93,6 @@
 			/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
               var disqus_shortname = 'magnusart'; // required: replace example with your forum shortname
               var disqus_identifier = '@article.friendlyUrl';
-              var disqus_developer = 1;
               /* * * DON'T EDIT BELOW THIS LINE * * */
               (function() {
               	var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
