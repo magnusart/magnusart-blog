@@ -21,7 +21,7 @@ case class Article(@Key("_id") friendlyUrl:String,
 	metaData:MetaData = MetaData()) {
 
 	import org.scala_tools.time.Imports.DateTimeFormat._
-	lazy val formattedPublishDate = publishDate.toString(forPattern(datePattern))
+	val formattedPublishDate = publishDate.toString(forPattern(datePattern))
 }
 
 object Article {
