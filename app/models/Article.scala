@@ -13,8 +13,8 @@ import com.codahale.jerkson._
 import models.MetaData._
 
 @JsonSnakeCase
-case class Article(@Key("_id") friendlyUrl:String, 
-	title:String, 
+case class Article(title:String, 
+	@Key("_id") friendlyUrl:String, 
 	body:String, 
 	author:String, 
 	publishDate:String = getLocalCurrentTime.toString) {

@@ -15,7 +15,7 @@ object Application extends Controller {
   
   def listArticles = Action {
   	val articles = Article.list
-  	Ok(Json.generate(articles))
+  	Ok(Json.generate(articles)).withHeaders("Content-Type" -> "application/json")
   }
 
   def getArticle(friendlyUrl:String) = Action {
@@ -24,13 +24,16 @@ object Application extends Controller {
   	} getOrElse(NotFound)
   }
 
+
+  case class ResponseJson(status:String, message:String = "No message")
+
   def upsertArticle(friendlyUrl:String) = Action { implicit request =>
     val json:String = request.body.asJson.map(_.toString).getOrElse("{}")
     Logger.debug("JSON: " + json)
     val updatedArticle:Option[Article] = Option(Json.parse[Article](json))
     updatedArticle map { article:Article =>
       Article.upsert(friendlyUrl, article)
-      Ok("")
+      Ok(Json.generate(ResponseJson("success"))).withHeaders("Content-Type" -> "application/json")
     } getOrElse(NotFound)
   }
 

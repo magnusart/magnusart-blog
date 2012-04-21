@@ -5,36 +5,42 @@
 <div id="posts" class="row">
 	<div class="span8">
 		<div class="well well-dropshadow">
-			<h2 class="post-heading"><a href="@routes.Application.getArticle(article.friendlyUrl)">@article.title</a></h2>
-			<h5 class="post-info">@Messages("post.info", article.author, article.formattedPublishDate)</h5>
-			<div>
-				@Html(article.body)
-				<br/>
-				<br/>
-				<a class="btn btn-warning" data-toggle="modal" href="#editArticle" >Edit Post</a>
+			<div class="edit-menu"> 
+				<ul>
+					<li><a href="#editArticle" data-toggle="modal"><i class="icon-pencil icon-white"></i> Edit Article</a></li>
+					<li><i class="icon-remove icon-white"></i> Delete Article</li>
+				</ul>
 			</div>
-			<div class="modal fade" id="editArticle">
-			  <div class="modal-header">
-			    <a class="close" data-dismiss="modal">×</a>
-			    <h3>Edit article: @article.title</h3>
-			  </div>
-			  <div class="modal-body">
-			  	<form id="editArticleForm">
-			  		<input type="hidden" name="friendly_url" value="@article.friendlyUrl" />
-			  		<label for="editArticleTitle">Title</label><input name="title" value="@article.title"/>
-				  	<label for="editArticleTextarea">Body text</label>
-				    <textarea id="editArticleTextarea" name="body" placeholder="Enter text ..." style="width: 510px; height: 200px">@article.body</textarea>
-				    <input type="hidden" name="author" value="@article.author" />
-				    <input type="hidden" name="publish_date" value="@article.publishDate" />
-				</form>
-			  </div>
-			  <div class="modal-footer">
-			    <a href="#" class="btn" data-dismiss="modal">Close</a>
-			    <a href="#" id="saveEditArticle" class="btn btn-primary">Save changes</a>
-			  </div>
-			  <script type="text/javascript">
-				  function doLoadArticle() {
-					$('#editArticleTextarea').wysihtml5({
+			<div class="article-content">
+				<h2 class="post-heading"><a href="@routes.Application.getArticle(article.friendlyUrl)">@article.title</a></h2>
+				<h5 class="post-info">@Messages("post.info", article.author, article.formattedPublishDate)</h5>
+				<div>
+					@Html(article.body)
+				</div>
+				<div class="modal fade" id="editArticle">
+					<div class="modal-header">
+						<a class="close" data-dismiss="modal">×</a>
+						<h3>Edit article: @article.title</h3>
+					</div>
+					<div class="modal-body">
+						<form id="editArticleForm">
+							<span id="errors" class="hide"><span class="label label-important">@Messages("article.edit.error.label")</span> <span id="error-message"></span><br/><br/></span>
+							<label for="editArticleTitle">@Messages("article.edit.title")</label><input id="editArticleTitle" name="title" value="@article.title"/>
+							<label for="editArticleFriendlyUrl">@Messages("article.edit.friendly.url")</label>
+							<input id="editArticleFriendlyUrl" name="friendly_url" value="@article.friendlyUrl" />
+							<label for="editArticleTextarea">@Messages("article.edit.body")</label>
+							<textarea id="editArticleTextarea" name="body" placeholder="Enter text ..." style="width: 510px; height: 150px">@article.body</textarea>
+							<input type="hidden" name="author" value="@article.author" />
+							<input type="hidden" name="publish_date" value="@article.publishDate" />
+						</form>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn" data-dismiss="modal">Close</a>
+						<a href="#" id="saveEditArticle" class="btn btn-primary">Save changes</a>
+					</div>
+					<script type="text/javascript">
+					function doLoadArticle() {
+						$('#editArticleTextarea').wysihtml5({
 						"font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
 						"emphasis": true, //Italics, bold, etc. Default true
 						"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
@@ -43,26 +49,26 @@
 						"image": true //Button to insert an image. Default true
 					});
 
-					$.fn.serializeObject = function()
-					{
-					    var o = {};
-					    var a = this.serializeArray();
-					    $.each(a, function() {
-					        if (o[this.name] !== undefined) {
-					            if (!o[this.name].push) {
-					                o[this.name] = [o[this.name]];
-					            }
-					            o[this.name].push(this.value || '');
-					        } else {
-					            o[this.name] = this.value || '';
-					        }
-					    });
-					    return o;
-					};
+						$.fn.serializeObject = function()
+						{
+							var o = {};
+							var a = this.serializeArray();
+							$.each(a, function() {
+								if (o[this.name] !== undefined) {
+									if (!o[this.name].push) {
+										o[this.name] = [o[this.name]];
+									}
+									o[this.name].push(this.value || '');
+								} else {
+									o[this.name] = this.value || '';
+								}
+							});
+							return o;
+						};
 
-					$("#saveEditArticle").live("click", function(){
-						self = this;
-						self.serialized = $('#editArticleForm').serializeObject();
+						$("#saveEditArticle").live("click", function(){
+							self = this;
+							self.serialized = $('#editArticleForm').serializeObject();
 						delete self.serialized._wysihtml5_mode; // Delete extra info
 
 						self.json = JSON.stringify(self.serialized);
@@ -74,17 +80,20 @@
 							data: self.json,
 							contentType: "application/json",
 							dataType: "json"
-						}).done(function(msg){ 
-							console.log("Success!");
+						}).done(function(data, textStatus, jqXHR){ 
+							console.log(data);
 							$('#editArticle').modal('hide');
-						}).fail(function(jqXHR, textStatus){
-							console.log("Failure! " + textStatus);
+							location.reload();
+						}).fail(function(jqXHR, textStatus, errorThrown){
+							$('#error-message').text("Unable to update an article with identifier '@article.friendlyUrl'");
+							$('#errors').removeClass('hide');
 						});
-					 }); 
-				  }
+					}); 
+					}
 
 
-			  </script>
+					</script>
+				</div>
 			</div>
 			@if(displayFullArticle) {
 			<hr>

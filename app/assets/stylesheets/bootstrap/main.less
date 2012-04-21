@@ -24,6 +24,88 @@ body {
 }
 
 h1, h2, h3, h4, h5 {
-	
+
+	font-family: @headingFontFamily;	
+}
+
+.corners-rounded-top (@radius: 5px, @border-top-width: 1px, @border-top-color: rgb(188,188,188)) {
+	border-top-left-radius: @radius @radius;
+	border-top-right-radius: @radius @radius;
+	border-top: @border-top-width solid @border-top-color;
+}
+
+.corners-rounded-bottom (@radius: 5px, @border-bottom-width: 2px, @border-bottom-color: rgb(35,35,35)) {
+	border-bottom-left-radius: @radius @radius;
+	border-bottom-right-radius: @radius @radius;
+	border-bottom: @border-bottom-width solid @border-bottom-color;
+}
+
+.corners-rounded (@radius: 5px, @border-width: 1px, @border-color: rgb(188,188,188)) {
+    .corners-rounded-top(@radius, @border-width, @border-color);
+	.corners-rounded-bottom(@radius, @border-width, @border-color);
+}
+
+.edit-menu {
+	margin-top: -19px;
 	font-family: @headingFontFamily;
+}
+
+.edit-menu ul {
+	font-size: 0.85em;
+	color: @grayLighter;
+	float: right;
+	margin: 0;
+	padding: 4px;
+	padding-bottom: 0px;
+	background-color: @gray;
+	.corners-rounded-bottom(4px, 4px, 1px, rgb(220,220,220));
+	#gradient > .vertical(@gray, @grayDarker);
+	@shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+	list-style-type: none;
+}
+
+.edit-menu ul > li:first-child {
+	margin-left: 8px;	
+}
+
+.edit-menu ul li {
+	margin-left: 4px;
+	margin-right: 8px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	float: left;
+	border-bottom: 3px solid @grayDarker;
+}
+
+.edit-menu ul li a:hover, 
+.edit-menu ul li a:active {
+	color: @white;
+	text-decoration: none;
+}
+
+.edit-menu ul li a:visited,
+.edit-menu ul li a:link
+{
+	color: @grayLighter;
+}
+
+.edit-menu ul li i {
+	margin-top: -1px;
+}
+
+.edit-menu ul li span.highlighted {
+	color: @orange;	
+}
+
+.edit-menu ul li span.highlighted:hover {
+	color: @orange;	
+}
+
+.edit-menu ul li:hover {
+	border-bottom: 3px solid @orange;
+	color: @white;
+}
+
+.article-content {
+	margin-top: 19px;
 }
