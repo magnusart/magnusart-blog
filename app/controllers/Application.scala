@@ -20,7 +20,7 @@ object Application extends Controller {
 
   def getArticle(friendlyUrl:String) = Action {
   	Article.get(friendlyUrl) map {
-  		article:Article => Ok(views.html.article(article, true)) 
+  		article:Article => Ok(views.html.article(article)) 
   	} getOrElse(NotFound)
   }
 

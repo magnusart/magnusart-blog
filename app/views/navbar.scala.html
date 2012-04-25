@@ -1,10 +1,18 @@
 @()
-	<div class="navbar navbar-fixed-top">
-	  <div class="navbar-inner">
-	    <div class="container">
-	      <ul class="nav">
-			  <li><img src="@routes.Assets.at("images/ma_logo.png")" /></li>
-	        </ul>
-	    </div>
-	  </div>
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="btn btn-navbar hidden" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+			<a class="brand" href="/"><img class="brand" src="@routes.Assets.at("images/ma_logo.png")" /></a>
+			<div class="nav-collapse">
+				<ul class="nav">
+					
+				</ul>
+			</div>
+		</div>
 	</div>
+</div>
