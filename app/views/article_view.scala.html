@@ -28,7 +28,7 @@
 							<label for="editArticleFriendlyUrl">@Messages("article.edit.friendly.url")</label>
 							<input id="editArticleFriendlyUrl" name="friendly_url" value="@article.friendlyUrl" />
 							<label for="editArticleTextarea">@Messages("article.edit.body")</label>
-							<textarea id="editArticleTextarea" name="body" placeholder="Enter text ..." style="width: 510px; height: 150px">@article.body</textarea>
+							<textarea id="editArticleTextarea" name="body" placeholder="Enter text ..." style="width: 510px; height: 100px;">@article.body</textarea>
 							<input type="hidden" name="author" value="@article.author" />
 							<input type="hidden" name="publish_date" value="@article.publishDate" />
 						</form>
@@ -39,14 +39,7 @@
 					</div>
 					<script type="text/javascript">
 					function doLoadArticle() {
-						$('#editArticleTextarea').wysihtml5({
-						"font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
-						"emphasis": true, //Italics, bold, etc. Default true
-						"lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-						"html": false, //Button which allows you to edit the generated HTML. Default false
-						"link": true, //Button to insert a link. Default true
-						"image": true //Button to insert an image. Default true
-					});
+						$( '#editArticleTextarea' ).ckeditor();
 
 						$.fn.serializeObject = function()
 						{
@@ -68,11 +61,10 @@
 						$("#saveEditArticle").live("click", function(){
 							self = this;
 							self.serialized = $('#editArticleForm').serializeObject();
-						delete self.serialized._wysihtml5_mode; // Delete extra info
 
-						self.json = JSON.stringify(self.serialized);
-						console.log("JSON: " + self.json);
-
+							self.json = JSON.stringify(self.serialized);
+						//console.log("JSON: " + self.json);
+						
 						$.ajax({
 							url: "@routes.Application.upsertArticle(article.friendlyUrl)",
 							type: "put",
