@@ -6,9 +6,45 @@ import com.codahale.jerkson.Json
 import models._
 import play.Logger
 import org.scala_tools.time.TypeImports.DateTime
+import play.api.data._
+import play.api.data.Forms._
 
 object Application extends Controller {
   
+val loginForm = Form(
+    tuple(
+      "authentication.username" -> text,
+      "authentication.password" -> text
+      ) verifying ("authentication.failed", result => result match {
+        case (username, password) => User.authenticate(username, password).isDefined
+        })
+      )
+
+   /**
+   * Handle login form submission.
+   */
+  def authenticate = Action { implicit request =>
+    loginForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.login(formWithErrors)),
+      formLogin => Redirect(routes.Application.index).withSession("username" -> formLogin._1)
+      )
+   }
+
+  /**
+  * Login page.
+  */
+  def login = Action { implicit request =>
+    Ok(views.html.login(loginForm))
+  }
+
+  /**
+  * Logout and clean the session.
+  */
+  def logout = Action {
+    Redirect(routes.Application.login).withNewSession.flashing("success" -> "authentication.loggedout")
+  }
+
+
   def index = Action {
     Ok(views.html.index(Article.list))
   }

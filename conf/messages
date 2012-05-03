@@ -8,3 +8,12 @@ article.edit.body=Body text
 article.edit.friendly.url=Friendly url
 article.edit.error.label=Server failure
 article.edit.error.notfound=The article you are trying to update does not exist
+
+# Authentication
+authentication.username=Username
+authentication.password=Password
+authentication.loggedout=You have succesfully been logged out.
+authentication.logout=Logout
+authentication.failed=Invalid username / password.
+authentication.logged_in_as=Logged in as
+authorization.failed=You do not have permission to access this resource.

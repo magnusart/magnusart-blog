@@ -13,18 +13,21 @@ object ApplicationBuild extends Build {
     	(base / "app" / "assets" / "stylesheets" / "bootstrap" * "responsive.less") +++ 
     	(base / "app" / "assets" / "stylesheets" * "*.less") )
 
-    val resolvers = Seq("Codahale" at "http://repo.codahale.com")
 
 	val appDependencies = Seq(
 		// Add your project dependencies here,
 		"com.novus" %% "salat-core" % "0.0.8-SNAPSHOT" withSources,
     	"com.novus" %% "salat-util" % "0.0.8-SNAPSHOT" withSources,
 		"org.scala-tools.time" % "time_2.9.1" % "0.5", // latest version at time of this writing
-		"com.codahale" %% "jerkson" % "0.5.0"
+		"com.codahale" %% "jerkson" % "0.5.0",
+        "com.edropple" % "velvetrope" % "1.0-SNAPSHOT",
+        "org.jasypt" % "jasypt" % "1.9.0"
 	)
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings( 
-    	lessEntryPoints <<= baseDirectory(customLessEntryPoints) 
-    	)
+    	resolvers ++= Seq("Codahale" at "http://repo.codahale.com",
+        "Ed Ropple's repository" at "http://maven.edropple.com"),
+        lessEntryPoints <<= baseDirectory(customLessEntryPoints)
+        )
 
 }
