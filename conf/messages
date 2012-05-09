@@ -5,6 +5,7 @@ post.info=Published by {0} at {1}
 # Article
 article.edit.title=Title
 article.edit.body=Body text
+article.edit.body.placeholder=Type in body text
 article.edit.friendly.url=Friendly url
 article.edit.error.label=Server failure
 article.edit.error.notfound=The article you are trying to update does not exist

@@ -7,13 +7,17 @@ import com.edropple.velvetrope.user.roles.Role
 import play.api.mvc.{Result, Request, RequestHeader}
 import play.api.mvc.Results._
 import play.api._
+import play.api.mvc._
+import play.api.data._
+import views._
+import controllers._
 
 
 object Global extends GlobalSettings with VelvetropeGlobal {
   override def onStart(app: Application) {
 	RegisterJodaTimeConversionHelpers()
-    //val password = User.encryptor.encryptPassword("secret")  
-    //User.add(User("Magnus", password, Set(Admin.name)))
+    val password = User.encryptor.encryptPassword("secret")  
+    User.add(User("magnus", password, Set(Admin.name)))
         
   }
 
@@ -42,7 +46,7 @@ object Global extends GlobalSettings with VelvetropeGlobal {
      * @param request The visitor's request
      * @return a Result that should be presented to the visitor.
      */
-    def onAuthenticationFailure[A](request: Request[A]): Result = Forbidden
+    def onAuthenticationFailure[A](request: Request[A]): Result = Redirect(routes.Application.login).flashing("failure" -> "authentication.failed")
 
     /**
      * Called when a user attempts to access an access-controlled resource without

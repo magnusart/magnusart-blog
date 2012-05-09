@@ -8,6 +8,9 @@ GET		/articles					controllers.Application.listArticles
 GET		/article/:friendlyUrl		controllers.Application.getArticle(friendlyUrl:String)
 PUT		/article/:friendlyUrl		controllers.Application.upsertArticle(friendlyUrl:String)
 
+#GET		/article/:friendlyUrl		controllers.Application.getArticle(friendlyUrl:String)
+#PUT		/article/:friendlyUrl		controllers.Application.upsertArticle(friendlyUrl:String)
+
 # Authentication
 GET     /login						controllers.Application.login
 POST    /authenticate				controllers.Application.authenticate

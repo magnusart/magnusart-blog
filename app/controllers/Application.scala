@@ -8,8 +8,9 @@ import play.Logger
 import org.scala_tools.time.TypeImports.DateTime
 import play.api.data._
 import play.api.data.Forms._
+import com.edropple.velvetrope.actions.AccessControlled
 
-object Application extends Controller {
+object Application extends Controller with AccessControlled {
   
 val loginForm = Form(
     tuple(
@@ -46,7 +47,7 @@ val loginForm = Form(
 
 
   def index = Action {
-    Ok(views.html.index(Article.list))
+      Ok(views.html.index(Article.list))
   }
   
   def listArticles = Action {
@@ -55,9 +56,9 @@ val loginForm = Form(
   }
 
   def getArticle(friendlyUrl:String) = Action {
-  	Article.get(friendlyUrl) map {
-  		article:Article => Ok(views.html.article(article)) 
-  	} getOrElse(NotFound)
+  	  Article.get(friendlyUrl) map {
+    		article:Article => Ok(views.html.article(article)) 
+    	} getOrElse(NotFound)
   }
 
 

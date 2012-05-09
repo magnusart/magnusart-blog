@@ -13,6 +13,13 @@ import com.edropple.velvetrope.user.RoleOwner
 import com.edropple.velvetrope.user.roles.Role
 import org.jasypt.util.password.BasicPasswordEncryptor
 
+/*
+* Roles for authorization
+*/
+object Admin extends Role {
+    override lazy val name = "role.admin"
+}
+
 case class User(@Key("_id") username: String, password: String, roles: Set[String]) extends RoleOwner {
 	  /**
      * Checks for a role on this user.
