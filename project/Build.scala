@@ -26,7 +26,8 @@ object ApplicationBuild extends Build {
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings( 
     	resolvers ++= Seq("Codahale" at "http://repo.codahale.com",
-        "Ed Ropple's repository" at "http://maven.edropple.com"),
+        "Ed Ropple's repository" at "http://maven.edropple.com",
+        "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"),
         lessEntryPoints <<= baseDirectory(customLessEntryPoints)
         )
 

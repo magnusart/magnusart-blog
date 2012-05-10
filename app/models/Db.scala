@@ -7,7 +7,7 @@ import java.net.URI
 
 object Db {
 	// Get the HEROKU MongoLab URI or fallback to configuration
-	lazy val mongoUri = Properties.envOrElse("MONGOLAB_URI", current.configuration.getString("mongodb.uri").getOrElse("mongodb:///") )
+	lazy val mongoUri = current.configuration.getString("mongodb.uri").getOrElse("mongodb:///")
 
 	def connect(collection: String) = {
 		Logger.debug("Mongo URI: " + mongoUri)
