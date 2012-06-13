@@ -36,8 +36,7 @@ object Global extends GlobalSettings with VelvetropeGlobal {
      */
     def getRoleOwner[A](request: Request[A]): Option[RoleOwner] = {
         val userId = username(request)
-        userId.map( User.find(_) ).getOrElse(None)
-
+        userId.map( User.findRoleOwner(_) )
     }
 
     /**

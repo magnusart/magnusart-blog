@@ -44,6 +44,8 @@ object User {
 	
 	def find(username: String) = UserDAO.findOneByID(username)
 	
+    def findRoleOwner(username: String) = UserDAO.findOneByID(username).get.asInstanceOf[RoleOwner]
+
 	def add(user:User) = UserDAO.insert(user)
 
 	def list:Set[User] = UserDAO.find(MongoDBObject.empty).toSet

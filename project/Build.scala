@@ -21,7 +21,7 @@ object ApplicationBuild extends Build {
 		"org.scala-tools.time" % "time_2.9.1" % "0.5", // latest version at time of this writing
 		"com.codahale" %% "jerkson" % "0.5.0",
         "com.edropple" % "velvetrope" % "1.0-SNAPSHOT",
-        "org.jasypt" % "jasypt" % "1.9.0"
+        "org.jasypt" % "jasypt" % "1.9.0"        
 	)
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings( 

@@ -13,7 +13,7 @@ import com.codahale.jerkson._
 import models.MetaData._
 
 @JsonSnakeCase
-case class Article(title:String, 
+case class Article (title:String, 
 	@Key("_id") friendlyUrl:String, 
 	body:String, 
 	author:String, 
@@ -23,11 +23,9 @@ case class Article(title:String,
 	val formattedPublishDate = new DateTime(publishDate).toString(forPattern(datePattern))
 }
 
-object Article {
-	private object ArticleDAO extends SalatDAO[Article, String](collection = Db.connect("articles"))
-
-	def list():List[Article] = ArticleDAO.find(MongoDBObject.empty).sort(orderBy = MongoDBObject("publishDate" -> 1)).toList
-	def get(friendlyUrl:String) = ArticleDAO.findOneByID(friendlyUrl)
-	def upsert(friendlyUrl:String, article:Article) = ArticleDAO.update(MongoDBObject("_id" -> friendlyUrl), article, true, false, new WriteConcern())			
-
+object Article extends ModelCompanion[Article, String] {
+	val dao = new SalatDAO[Article, String](collection = Db.connect("articles")) {}
+	def list():List[Article] = dao.find(MongoDBObject.empty).sort(orderBy = MongoDBObject("publishDate" -> 1)).toList
+	def get(friendlyUrl:String) = dao.findOneById(friendlyUrl)
+	def upsert(friendlyUrl:String, article:Article) = dao.update(q = MongoDBObject("_id" -> friendlyUrl), t = article, upsert = true, multi = false, wc = new WriteConcern())
 }
