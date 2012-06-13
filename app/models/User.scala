@@ -35,18 +35,18 @@ case class User(@Key("_id") username: String, password: String, roles: Set[Strin
     def getAllRoles: Seq[Role] = roles.flatMap( Role.fromString(_) ).toSeq
 }
 
-object User {
-	private object UserDAO extends SalatDAO[User, String](collection = Db.connect("users")) 
+object User extends ModelCompanion[User, String] {
+	val dao = new SalatDAO[User, String](collection = Db.connect("users")) {}
 
 	lazy val encryptor = new BasicPasswordEncryptor // Threadsafe
 
-	def authenticate(username: String, password: String) = UserDAO.findOneById(username).filter( user => encryptor.checkPassword(password, user.password))
+	def authenticate(username: String, password: String) = dao.findOneById(username).filter( user => encryptor.checkPassword(password, user.password))
 	
-	def find(username: String) = UserDAO.findOneById(username)
+	def find(username: String) = dao.findOneById(username)
 	
-    def findRoleOwner(username: String) = UserDAO.findOneById(username).get.asInstanceOf[RoleOwner]
+    def findRoleOwner(username: String) = dao.findOneById(username).get.asInstanceOf[RoleOwner]
 
-	def add(user:User) = UserDAO.insert(user)
+	def add(user:User) = dao.insert(user)
 
-	def list:Set[User] = UserDAO.find(MongoDBObject.empty).toSet
+	def list:Set[User] = dao.find(MongoDBObject.empty).toSet
 }
