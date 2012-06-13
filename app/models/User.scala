@@ -40,11 +40,11 @@ object User {
 
 	lazy val encryptor = new BasicPasswordEncryptor // Threadsafe
 
-	def authenticate(username: String, password: String) = UserDAO.findOneByID(username).filter( user => encryptor.checkPassword(password, user.password))
+	def authenticate(username: String, password: String) = UserDAO.findOneById(username).filter( user => encryptor.checkPassword(password, user.password))
 	
-	def find(username: String) = UserDAO.findOneByID(username)
+	def find(username: String) = UserDAO.findOneById(username)
 	
-    def findRoleOwner(username: String) = UserDAO.findOneByID(username).get.asInstanceOf[RoleOwner]
+    def findRoleOwner(username: String) = UserDAO.findOneById(username).get.asInstanceOf[RoleOwner]
 
 	def add(user:User) = UserDAO.insert(user)
 
